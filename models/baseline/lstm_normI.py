@@ -45,7 +45,7 @@ class lstm_normI(BasicModel):
          
          
          img = ZeroPadding2D((1,1))(question_img)
-         img = Conv2D(64, (3, 3), activation='tanh', padding='same')(img)
+         img = Conv2D(64, (3, 3), activation='relu', padding='same')(img)
          img = ZeroPadding2D((1,1))(img)
          img = Conv2D(64, (3, 3), activation='relu')(img)
          img = MaxPooling2D(pool_size=(2, 2), strides = (2,2))(img)
@@ -84,7 +84,7 @@ class lstm_normI(BasicModel):
          img = Dropout(dropout_rate)(img)
          img = Dense(4096, activation='relu')(img)
          img = Dropout(dropout_rate)(img)
-         img = Dense(1024, activation='relu')(img)
+         img = Dense(1024, activation='tanh')(img)
          
          
          img = Lambda(lambda  x: K.l2_normalize(x,axis=1), name='img_output')(img)
