@@ -19,7 +19,9 @@ def loadmodel(_model, _custrom_objects= None):
     model = load_model(_model, _custrom_objects)
     #model.summary()  
 
-    return model        
+    return model   
+
+    
 
 
 def load_images(dim, img_path):
