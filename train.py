@@ -11,7 +11,7 @@ from functions.optimizers import *
 from functions.load_files import *
 from keras.preprocessing.text import Tokenizer, one_hot
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 
 #Load data
@@ -53,7 +53,8 @@ params = DottableDict({"network_type": "lstm_normI",
                        "embedding_dim": embedding_dim,
                        "embedding_matrix": embedding_matrix,
                        "img_dims": (224,224,1),
-                       "num_classes": 462})
+                       "num_classes": 462,
+                       "num_hidden_layers":3})
     
     
 
@@ -143,7 +144,7 @@ valid_generator = DataGenerator(v_ids, v_labels, v_images, v_questions,  **v_dat
 
 
 model_params =  DottableDict({"epochs": 100,
-                              "verbose": 1,
+                              "verbose": 2,
                               "workers": 6,
                               "use_multiprocessing": True,
                               "save_h5": 'cnn_simple.h5'})
@@ -160,5 +161,20 @@ history = my_model.fit_generator(generator=train_generator,
 #hisrory(history)
 
 my_model.save(model_params.save_h5)
+
+
+epochs = range(1, len(history.history['loss']) + 1)
+plt.title("Accuracy")
+plt.plot(epochs,history.history["accuracy"], color="r", label="train")
+plt.plot(epochs,history.history["val_accuracy"], color="b", label="validation")
+plt.xlabel('Epochs')
+plt.grid()
+plt.legend(loc='best')
+plt.tight_layout()
+plt.savefig('data/accuracy_loss.png')
+
+
+
+
 
 

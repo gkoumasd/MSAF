@@ -296,7 +296,7 @@ def main ():
     
     
      #export datafrane to csv
-    df_valid.to_csv('data/valid.csv', encoding='utf-8', index=True)
+    df_valid.to_csv('data/test.csv', encoding='utf-8', index=True)
     
             
           

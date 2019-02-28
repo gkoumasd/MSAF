@@ -4,7 +4,8 @@ from classes import text_based_classes as t
 from keras.preprocessing.sequence import pad_sequences
 from classes.DottableDict import DottableDict
 from functions.mutlilabel_metrics import *
-from classes.DataGeneratorPredict import DataGeneratorPredict 
+from classes.DataGeneratorPredict import DataGeneratorPredict
+import numpy as np 
 
 test = pd.read_csv('data/test.csv', sep=',')
 test = test.rename(columns={ test.columns[0]: "IDs" })
@@ -28,19 +29,23 @@ max_seq_length = 30
 
 
 
-model_params =  DottableDict({'name': 'lstm_normI_DAQUAR.h5',
-                'custrom_objects': {'precision':precision, 'recall': recall, 'fmeasure': fmeasure},
-               })
+#model_params =  DottableDict({'name': 'lstm_normI_DAQUAR.h5',
+#                'custrom_objects': {'precision':precision, 'recall': recall, 'fmeasure': fmeasure},
+#               })
 
 
-model = loadmodel(model_params.name,  model_params.custrom_objects) 
+model_params =  DottableDict({'name': 'lstm_normI_DAQUAR.h5'})
+model = load_model(model_params.name)
 model.summary()
 
 
 
 ids = test['IDs']
-labels = test.iloc[:,1:69]
+ids = np.array(ids)
+labels = test.iloc[:,1:463]
+labels = np.array(labels)
 images = test['imgs']
+images = np.array(images)
 
 questions = tokenizer.texts_to_sequences(questions)
 questions = pad_sequences(questions, maxlen= max_seq_length) 
@@ -59,25 +64,53 @@ data_params = {'batch_size': 32,
                  'txt_dim': max_seq_length,
                  'dir_imgs': 'data/DAQUAR/nyu_depth_images/',
                  'n_channels': 3,
+                 'n_classes': 462,
                  'shuffle': True}
 
 generator = DataGeneratorPredict(ids, labels, images, questions,  **data_params)
 
 
-steps = len(ids) / 32
-predictions = model.predict_generator(generator, steps)
 
-print(predictions[0])
-print(labels.loc[0])
+model_params =  DottableDict({"verbose": 1,
+                              "workers": 6,
+                              "use_multiprocessing": True})
 
-print(predictions[1])
-print(labels.loc[1])
+metrics = model.evaluate_generator(generator=generator,
+                                    use_multiprocessing=model_params.use_multiprocessing,
+                                    verbose = model_params.verbose,
+                                    workers=model_params.workers)
 
-print(predictions[2])
-print(labels.loc[2])
+print("{}: {}".format(model.metrics_names[0], metrics[0]))
+print("{}: {}".format(model.metrics_names[1], metrics[1]))
 
 
-predicted_classes = convert_to_class(predictions)
+
+
+#steps = len(ids) / 32
+#predictions = model.predict_generator(generator, steps)
+
+#print("{}: {}".format(model.metrics_names[0], predictions[0]))
+
+
+#print(predictions[0])
+#print(labels.loc[0])
+
+#print(predictions[1])
+#print(labels.loc[1])
+
+#print(predictions[2])
+#print(labels.loc[2])
+
+
+
+#import numpy as np
+#categories = load_pickle('data/category_words.pickle')
+#Get lalel
+#lalel = labels[187].tolist()
+#Find index
+#index = [n for n,x in enumerate(lalel) if x==1]
+#category = categories[index[0]]
+
 
 
 

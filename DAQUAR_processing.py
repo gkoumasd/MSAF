@@ -46,7 +46,7 @@ def save_data(filename, X):
 
 
 
-file_path = '../../Work Folders/Documents/Reduced DAQUAR/train.txt'
+file_path = '../../Work Folders/Documents/Reduced DAQUAR/test.txt'
 df = create_dataframe(file_path)
 
 target = df['Answer']
