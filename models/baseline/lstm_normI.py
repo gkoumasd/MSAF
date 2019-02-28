@@ -17,6 +17,7 @@ class lstm_normI(BasicModel):
          self.embedding_matrix = self.opt.embedding_matrix
          self.img_dims = self.opt.img_dims
          self.num_classes = self.opt.num_classes
+         self.num_hidden_layers = self.opt.num_hidden_layers
     
     def  __init__(self, opt):
           #super(lstm_normI, self).__init__(opt)
@@ -84,10 +85,10 @@ class lstm_normI(BasicModel):
          img = Dropout(dropout_rate)(img)
          img = Dense(4096, activation='relu')(img)
          img = Dropout(dropout_rate)(img)
-         img = Dense(1024, activation='tanh')(img)
+         img = Dense(1024, activation='tanh' , name='img_output')(img)
          
          
-         img = Lambda(lambda  x: K.l2_normalize(x,axis=1), name='img_output')(img)
+         #img = Lambda(lambda  x: K.l2_normalize(x,axis=1), name='img_output')(img)
          
          return Model(inputs=question_img, outputs=img)
          
@@ -109,11 +110,11 @@ class lstm_normI(BasicModel):
          
          mergedOut = Multiply()([lstm_model.get_layer('txt_output').output,vgg_model.get_layer('img_output').output])
          #mergedOut = vgg_model.get_layer('img_output').output
-        
+         mergedOut = Dropout(dropout_rate)(mergedOut)
          
-         mergedOut = Dropout(dropout_rate)(mergedOut)
-         mergedOut = Dense(1000, activation='tanh')(mergedOut)
-         mergedOut = Dropout(dropout_rate)(mergedOut)
+         for i in range(self.num_hidden_layers):
+             mergedOut = Dense(1024, activation='tanh')(mergedOut)
+             mergedOut = Dropout(dropout_rate)(mergedOut)
          #mergedOut = Dense(self.num_classes, activation='sigmoid')(mergedOut) # This is for multi-label classification
          mergedOut = Dense(self.num_classes, activation='softmax')(mergedOut)
          
