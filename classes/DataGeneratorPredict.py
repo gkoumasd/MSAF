@@ -12,7 +12,7 @@ class DataGeneratorPredict(keras.utils.Sequence):
     
     
     def __init__(self, list_IDs, labels, images, questions, batch_size=32, txt_dim =10, dim=(32,32,32), n_channels=1,
-                 dir_imgs = None ,  shuffle=True):
+                 dir_imgs = None ,  n_classes=10, shuffle=True):
         #'Initialization'
         #dim express volume of data. E.g., images of size 224x224 has dim=(224,224) and n_channels=3
         self.dim = dim
@@ -24,6 +24,7 @@ class DataGeneratorPredict(keras.utils.Sequence):
         self.questions = questions
         self.dir_imgs = dir_imgs
         self.n_channels = n_channels
+        self.n_classes = n_classes
         self.shuffle = shuffle
         self.on_epoch_end()
     
@@ -77,7 +78,7 @@ class DataGeneratorPredict(keras.utils.Sequence):
         X2 = np.empty((self.batch_size, *self.dim, self.n_channels))
         # This is for binary classification
         #y = np.empty((self.batch_size), dtype=int)
-        #y = np.empty((self.batch_size, self.n_classes), dtype=int)
+        y = np.empty((self.batch_size, self.n_classes), dtype=int)
 
         # Generate data
         for i, ID in enumerate(list_IDs_temp):
@@ -89,10 +90,10 @@ class DataGeneratorPredict(keras.utils.Sequence):
             if self.dir_imgs != None:
                 
                
-                img = self.images.loc[ID].replace('\\','/')
+                img = self.images[ID].replace('\\','/')
                 img =  img + '.png'
                 
-                img_path = os.path.join( self.dir_imgs, img)
+                img_path = os.path.join(self.dir_imgs, img)
                 
                 
                 
@@ -109,12 +110,12 @@ class DataGeneratorPredict(keras.utils.Sequence):
             # Store class into a list
             
             #This is for binaray classification
-            #y[i,] = self.labels.loc[ID]
+            y[i,] = self.labels[ID]
             
         X = [X1,X2]
         #X = X2
         #return X, keras.utils.to_categorical(y, num_classes=self.n_classes)
-        return X 
+        return X, y
     
     #Denotes the number of batches per epoch := total samples / batch size 
     def __len__(self):
@@ -129,11 +130,11 @@ class DataGeneratorPredict(keras.utils.Sequence):
         list_IDs_temp = [self.list_IDs[k] for k in indexes]
         
         # Generate data
-        X  = self.__data_generation(list_IDs_temp)
+        X, y = self.__data_generation(list_IDs_temp)
         
        
 
-        return X
+        return X, y#
 
 # -*- coding: utf-8 -*-
 
