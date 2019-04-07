@@ -153,8 +153,8 @@ class vgg_cnn(BasicModel):
          #mergedOut = img_model.get_layer('img_output').output
         
           
-         #for i in range(self.num_hidden_layers):
-         #    mergedOut = Dense(128, activation='relu' , name = 'fc' + str(i))(mer1gedOut)
+         for i in range(self.num_hidden_layers):
+             mergedOut = Dense(128, activation='relu' , name = 'fc' + str(i))(mergedOut)
          
          #mergedOut = Dense(128, activation='tanh' , name = 'fc_1')(mergedOut)
         
