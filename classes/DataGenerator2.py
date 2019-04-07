@@ -123,7 +123,7 @@ class DataGenerator(keras.utils.Sequence):
             
             #print(y[i,])
         #X = [X1,X1,X1,X2]
-        X = [X2]
+        X = [X1,X2]
         #print('type:', type(X1))
         #X = [X1,X1,X1]
         #return X, keras.utils.to_categorical(y, num_classes=self.n_classes)
