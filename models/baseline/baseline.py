@@ -139,7 +139,7 @@ class vgg_cnn(BasicModel):
          print('Build VGG19 & multi-channel CNN model...')
          
          #VQA model
-         #txt_model = self.text_model()
+         txt_model = self.text_model()
          img_model = self.img_model()
          
          #context_1 = self.context()
@@ -149,8 +149,8 @@ class vgg_cnn(BasicModel):
          
          #mergedOut = Concatenate()([txt_model.get_layer('txt_output').output,context])
          
-         #mergedOut = Concatenate()([txt_model.get_layer('txt_output').output,img_model.get_layer('img_output').output, context_1,context_2])
-         mergedOut = img_model.get_layer('img_output').output
+         mergedOut = Concatenate()([txt_model.get_layer('txt_output').output,img_model.get_layer('img_output').output])
+         #mergedOut = img_model.get_layer('img_output').output
         
           
          #for i in range(self.num_hidden_layers):
@@ -167,8 +167,8 @@ class vgg_cnn(BasicModel):
          
          
          
-         #multimodal = Model([txt_model.get_layer('txt_input').output,img_model.get_layer('img_input').output, context_1,context_2], mergedOut)
-         multimodal = Model(img_model.get_layer('img_input').output, mergedOut)
+         multimodal = Model([txt_model.get_layer('txt_input').output,img_model.get_layer('img_input').output], mergedOut)
+         #multimodal = Model(img_model.get_layer('img_input').output, mergedOut)
          
          
          #This is for fine tunning
