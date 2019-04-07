@@ -132,7 +132,7 @@ class DataGeneratorEvaluate(keras.utils.Sequence):
             #This is for binaray classification
             
             
-        X = [X2]
+        X = [X1,X2]
         #X = [X1,X1,X1,X2]
         #X = X1
         #return X, keras.utils.to_categorical(y, num_classes=self.n_classes)
