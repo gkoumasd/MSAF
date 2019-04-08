@@ -62,13 +62,15 @@ embedding_dim = 300
 
 
 
-params = DottableDict({"network_type": "baseline",
+params = DottableDict({"network_type": "multimodal",
                        "max_seq_length": max_seq_length,
                        "vocab_size": vocab_size,
                        "embedding_dim": embedding_dim,
                        "embedding_matrix": embedding_matrix,
-                       "img_dims": (64,64,3),
-                       "num_hidden_layers":2})
+                       "img_dims": (64,64,3)})
+    
+    
+
     
 
     
@@ -129,7 +131,8 @@ data_params = {'batch_size': 32,
                'txt_dim': max_seq_length,
                'dir_imgs': 'datasets/Flickr/data/flickr-dataset/images/trainingset',
                'n_channels': 3,
-               'shuffle': True}
+               'shuffle': True,
+               'nn_type':params['network_type']}
 
 
 #data_params = {'dim': (64,64),
@@ -167,7 +170,8 @@ v_data_params = {'batch_size': 32,
                  'txt_dim': max_seq_length,
                  'dir_imgs': 'datasets/Flickr/data/flickr-dataset/images/trainingset',
                  'n_channels': 3,
-                 'shuffle': True}
+                 'shuffle': True,
+                 'nn_type':params['network_type']}
 
 
 # Parameters
