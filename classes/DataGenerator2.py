@@ -11,7 +11,7 @@ class DataGenerator(keras.utils.Sequence):
     
     
     def __init__(self, list_IDs, labels, images, lw, pw, nw, texts, batch_size=32, txt_dim =10, dim=(32,32,32), n_channels=1,
-                 dir_imgs = None , shuffle=True):
+                 dir_imgs = None , shuffle=True, nn_type = ''):
         #'Initialization'
         #dim express volume of data. E.g., images of size 224x224 has dim=(224,224) and n_channels=3
         self.dim = dim
@@ -27,6 +27,7 @@ class DataGenerator(keras.utils.Sequence):
         self.dir_imgs = dir_imgs
         self.n_channels = n_channels
         self.shuffle = shuffle
+        self.nn_type = nn_type
         self.on_epoch_end()
     
     #Updates indexes after each epoch'
@@ -123,7 +124,13 @@ class DataGenerator(keras.utils.Sequence):
             
             #print(y[i,])
         #X = [X1,X1,X1,X2]
-        X = [X1,X2]
+        if (self.nn_type=='text_based'):
+            X = [X1]
+        elif(self.nn_type=='img_based'):
+            X = [X2]
+        else:
+            X = [X1,X2]
+        
         #print('type:', type(X1))
         #X = [X1,X1,X1]
         #return X, keras.utils.to_categorical(y, num_classes=self.n_classes)
