@@ -1,3 +1,8 @@
+from numpy.random import seed
+seed(1)
+from tensorflow import set_random_seed
+set_random_seed(2)
+
 from classes.DottableDict import DottableDict
 import models
 import pandas as pd
@@ -62,7 +67,7 @@ embedding_dim = 300
 
 
 
-params = DottableDict({"network_type": "multimodal",
+params = DottableDict({"network_type": "text_based",
                        "max_seq_length": max_seq_length,
                        "vocab_size": vocab_size,
                        "embedding_dim": embedding_dim,
@@ -188,11 +193,11 @@ valid_generator = DataGenerator(v_ids, v_labels, v_images, v_lw,v_pw,v_nw,valid_
 
 
 
-model_params =  DottableDict({"epochs": 20,
+model_params =  DottableDict({"epochs": 10,
                               "verbose": 1,
                               "workers": 6,
                               "use_multiprocessing": True,
-                              "save_h5": 'trainedModels/img.h5'})
+                              "save_h5": 'trainedModels/mul.h5'})
 
 
 history = my_model.fit_generator(generator=train_generator,
@@ -233,7 +238,7 @@ plt.plot(history.history["val_loss"], color="b", label="validation")
 plt.legend(loc="best")
 
 plt.tight_layout()
-plt.savefig('trainedModels/img_accuracy_loss.png')
+plt.savefig('trainedModels/mul_accuracy_loss.png')
 
 my_model.save(model_params.save_h5)
 
