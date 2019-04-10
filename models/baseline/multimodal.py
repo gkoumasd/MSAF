@@ -4,6 +4,8 @@ from keras.models import Model
 from keras.layers import Lambda,Multiply,Concatenate, Input,Dense, Flatten, Dropout, Conv1D,GlobalAveragePooling2D, Conv2D,LSTM,Embedding, MaxPooling1D, MaxPooling2D, ZeroPadding2D, concatenate
 from models.BasicModel import BasicModel
 import keras.backend as K
+from functions.tensor_fusion import *
+
 
 import pandas as pd#
 import pickle
@@ -66,7 +68,9 @@ class vgg_cnn(BasicModel):
         merged = Concatenate()([flat1, flat2, flat3])
         #merged  = Concatenate([, , flat3])
         
-        text = Dense(512, activation='tanh' , name='txt_output')(merged)
+        text = Dense(32, activation='tanh' , name='txt_output')(merged)
+        
+        
         
         
         return Model(inputs=txt_input, outputs=text)
@@ -98,7 +102,7 @@ class vgg_cnn(BasicModel):
     
         #Block flatten
         img = Flatten()(img)
-        img = Dense(512, activation='relu')(img)
+        img = Dense(32, activation='relu')(img)
         img = Dropout(0.5, name='img_output')(img)
        
         return Model(inputs=img_input, outputs=img)
@@ -141,19 +145,26 @@ class vgg_cnn(BasicModel):
          txt_model = self.text_model()
          img_model = self.img_model()
          
+         txt = txt_model.get_layer('txt_output').output
+         img = img_model.get_layer('img_output').output
          
-        
+         
+         # L2 normalization
+         #txt = Lambda(lambda x: K.l2_normalize(x,axis=1))(txt)
+         #img = Lambda(lambda x: K.l2_normalize(x,axis=1))(img)
          
          
+         #mergedOut = Concatenate()([txt,img])
+         #mergedOut = Dense(100, activation='tanh' , name = 'fc_1')(mergedOut)
+         #mergedOut = Dense(32, activation='tanh' , name = 'fc_2')(mergedOut)
          
-         mergedOut = Concatenate()([txt_model.get_layer('txt_output').output,img_model.get_layer('img_output').output])
-        
-        
-          
+         #Tensor based fusion
+         #tensor 'bilinearProduct' contains the batchwise outer product 
+         input_dim = 32
+         bilinearProduct = Lambda(outer_product, output_shape=(input_dim**2, ))([txt, img]) 
          
-         #mergedOut = Dense(128, activation='tanh' , name = 'fc_1')(mergedOut)
-        
-       
+         mergedOut = Dense(100, activation='tanh' , name = 'fc_1')(bilinearProduct)
+         mergedOut = Dense(32,  activation='tanh' , name = 'fc_2')(mergedOut)
              
          #Sigmoid + Binary crossentropy    
          #mergedOut = Dense(1, activation='sigmoid')(mergedOut) 
