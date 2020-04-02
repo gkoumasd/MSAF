@@ -36,16 +36,16 @@
   + **fine_tune in `{'True','False'}**. Whether you want to train the model with the data. 
   + **model specific parameters**. For running a model on the dataset, uncomment the respective area of the model and comment the areas for the other models. Please refer to the model implementations in /models/monologue/ for the meaning of each model specific parameter.
     + supported models include but are not limited to:
-      + RAVEN (only for word-aligned data)
-      + Multimodal-Transformer (only for word-aligned data)
       + EF-LSTM
-      + TFN
-      + MFN
-      + MARN
-      + Graph-MFN
+      + LF-LSTM
       + RMFN
+      + TFN
       + LMF
-      + Vanilla-LSTHM
+      + MARN
+      + Multimodal-Transformer (only for word-aligned data)
+      + MMUU-BA
+      + RAVEN (only for word-aligned data)
+      + MFN
 
   
 ### Grid Search for the Best Parameters
