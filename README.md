@@ -1,5 +1,5 @@
 
-# What makes the dierence? A Systematic Review on Multimodal Language Fusion Strategies
+# What makes the difference? A Systematic Review on Multimodal Language Fusion Strategies
 
 ## Instructions to run the code
 
