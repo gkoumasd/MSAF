@@ -1,5 +1,5 @@
 
-# What makes the difference? A Systematic Review on Multimodal Language Fusion Strategies
+# What makes the difference? An Empirical Comparison of  Fusion Strategies for Multimodal Language Analysis
 
 This repository includes SOTA modality fusion approaches for sentiment analysis and emotion recognition tasks.
 All models have implemented in a unified PyTorch framework for conducting an empirical comparison across different fusion approaches.
