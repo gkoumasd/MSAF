@@ -2,7 +2,6 @@
 """
 Created on Tue Mar  5 11:44:48 2019
 
-@author: qiuchi
 """
 import torch
 import random
