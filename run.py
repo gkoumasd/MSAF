@@ -1,32 +1,24 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Mar  5 11:44:48 2019
+Created on Tue Mar 5 11:44:48 2019
 
+@author: qiuchi
 """
 import torch
 import random
-from utils.params import Params
+
 import os
-import numpy as np
 import models
 import argparse
 import pandas as pd
 import pickle
-from dataset import multimodal
-from utils.io_utils import parse_grid_parameters
-from utils.case_study import post_hoc_analysis
-def set_seed(params):
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    random.seed(params.seed)
-    os.environ['PYTHONHASHSEED'] = str(params.seed)
-    np.random.seed(params.seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed(params.seed)
-        torch.cuda.manual_seed_all(params.seed)
-    else:
-        torch.manual_seed(params.seed)
-    
+from dataset import setup 
+from utils.model import train,test,save_model,save_performance,print_performance
+from utils.io import parse_grid_parameters
+from utils.generic import set_seed
+from utils.params import Params
+
+
 def run(params):   
     model = None
     if 'load_model_from_dir' in params.__dict__ and params.load_model_from_dir:
@@ -51,9 +43,6 @@ def run(params):
     performance_dict = test(model, params)
     performance_str = print_performance(performance_dict, params)
     save_model(model,params,performance_str)
-    
-    #Print results per sample & subsystem performance
-    post_hoc_analysis(params,model)
   
     return performance_dict
 
@@ -70,16 +59,9 @@ if __name__ == '__main__':
         mode = params.mode
     set_seed(params)
     params.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-    
-    if params.dialogue_format:
-        # Use dialogue model utils and data paths
-        from utils.dialogue_model import train,test,save_model,save_performance,print_performance
-    else:
-        from utils.monologue_model import train,test,save_model,save_performance,print_performance
-        
     if mode == 'run':
         results = []
-        reader = multimodal.setup(params)
+        reader = setup(params)
         reader.read(params)
         params.reader = reader   
         performance_dict = run(params)
@@ -104,7 +86,7 @@ if __name__ == '__main__':
                 merged_dict[key] = value
             print(parameter_list)
             params.setup(parameter_list)
-            reader = multimodal.setup(params)
+            reader = setup(params)
             reader.read(params)
             params.reader = reader
             performance_dict = run(params)
