@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import os
-from dataset.multimodal.data_reader import CMUMOSEIDataReader, CMUMOSIDataReader, POMDataReader, IEMOCAPDataReader
-
 def setup(opt):
-    dir_path = os.path.join(opt.datasets_dir,opt.data_dir)
     if opt.dataset_name.lower() == 'cmumosei':
-        reader = CMUMOSEIDataReader(dir_path,opt)
+        from dataset.mosei_reader import CMUMOSEIReader as MMDataReader
     elif opt.dataset_name.lower() == 'cmumosi':
-        reader = CMUMOSIDataReader(dir_path,opt)
-    elif opt.dataset_name.lower() == 'pom':    
-        reader = POMDataReader(dir_path,opt)
-    elif opt.dataset_name.lower() == 'iemocap':    
-        reader = IEMOCAPDataReader(dir_path,opt)
+        from dataset.mosi_reader import CMUMOSIReader as MMDataReader
+    elif opt.dataset_name.lower() == 'iemocap':
+        from dataset.iemocap_reader import IEMOCAPReader as MMDataReader
+    else:
+        #Default
+        from dataset.mosi_reader import CMUMOSIReader as MMDataReader
+
+    reader = MMDataReader(opt)
     return reader
