@@ -68,7 +68,7 @@ Upon the acceptance of the paper, we will share the code for reproducing the res
 + **output_file**.  The file storing the performances for each search in the pool of parameters. By default, it is eval/grid_search_`{dataset_name}`_`{network_type}`.csv
 
 
-###If you use the code, please cite as follows:
+### If you use the code, please cite as follows:
 Gkoumas, D., Li, Q., Lioma, C., Yu, Y., & Song, D. (2021). What makes the difference? An empirical comparison of fusion strategies for multimodal language analysis. Information Fusion, 66, 184-197.
 
 
