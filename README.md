@@ -3,7 +3,6 @@
 
 This repository includes SOTA modality fusion approaches for sentiment analysis and emotion recognition tasks.
 All models have implemented in a unified PyTorch framework for conducting an empirical comparison across different fusion approaches.
-Upon the acceptance of the paper, we will share the code for reproducing the results presented in the paper.
 
 ## Instructions to run the code
 
